@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>auth</title>
+</head>
+<body>
+
+	<form method="POST" id="authForm" onsubmit="return false;">
+	<div id="errorForm" style="color: red"></div>
+	<div id="successForm" style="color: green"></div>
+		E-mail:
+		<input type="text" name="email" id="email"><br>
+		<span id="errorEmail" style="color: red"></span><br>
+		Password:
+		<input type="password" name="pass" id="pass"><br>
+		<span id="errorPass" style="color: red"></span><br>
+		<button type="submit" id="sendBtn">Send</button>	
+	</form>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script>
+		$(function(){
+			$('#sendBtn').click(function(){
+				$.ajax({
+					url: 'auth.php',
+					type: 'post',
+					data: $('#authForm').serialize(),
+					dataType: 'json',
+					success: function(responce){
+						if (responce.errors.email) {
+							$('#errorEmail').html(responce.errors.email)
+						}else{
+							$('#errorEmail').html('')
+						}
+						if (responce.errors.pass) {
+							$('#errorPass').html(responce.errors.pass)
+						}else{
+							$('#errorPass').html('')
+						}
+						if (responce.errors.form) {
+							$('#errorForm').html(responce.errors.form)
+						}else {
+							$('#errorForm').html('')
+						}
+						if(responce.isValid == true) {
+							window.location.href = "redirect.php";
+						}
+					} 
+				});
+				if ($('#email').val() == '' || $('#pass').val() == '') {
+					alert('Enter form');
+				}
+			})
+
+		})
+	</script>
+</body>
+</html>
